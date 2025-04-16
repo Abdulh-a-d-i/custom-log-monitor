@@ -1,0 +1,4 @@
+Apr 14 06:34:01 ubuntu ERROR: Database connection failed
+Apr 14 06:34:02 ubuntu WARNING: High CPU usage detected
+Apr 14 06:34:03 ubuntu CRITICAL: Disk space critically low
+Apr 14 06:34:04 ubuntu INFO: System running normally
