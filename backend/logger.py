@@ -1,15 +1,31 @@
-import re
+import os
+import asyncio
 
-LOG_FILE_PATH = "/var/log/syslog"  # Or any other log file
+# Use your preferred log file path here
+LOG_FILE_PATH = "/var/log/syslog"
 SEVERITIES = ["ERROR", "WARNING", "CRITICAL"]
 
 def get_filtered_logs():
     filtered_logs = []
     try:
-        with open(LOG_FILE_PATH, "r") as f:
-            for line in f:
-                if any(severity in line.upper() for severity in SEVERITIES):
+        with open(LOG_FILE_PATH, "r") as file:
+            for line in file:
+                if any(sev in line.upper() for sev in SEVERITIES):
                     filtered_logs.append(line.strip())
+        return filtered_logs[-100:]  # Return latest 100 logs
+    except PermissionError:
+        return ["Permission denied - cannot read log file"]
     except Exception as e:
         print(f"Error reading log file: {e}")
-    return filtered_logs
+        return []
+
+async def tail_log_file():
+    with open(LOG_FILE_PATH, "r") as file:
+        file.seek(0, os.SEEK_END)  # Go to the end of the file
+        while True:
+            line = file.readline()
+            if not line:
+                await asyncio.sleep(0.5)
+                continue
+            if any(sev in line.upper() for sev in SEVERITIES):
+                yield line.strip()
