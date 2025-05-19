@@ -1,24 +1,21 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import LogsPage from "./pages/LogsPage";
+import LogViewer from "./components/LogViewer";
+//import SystemHealth from "./components/SystemHealth";
+import VisualizationPage from "./pages/VisualizationPage";
+import NavBar from "./components/NavBar";
 
-const App = () => {
+function App() {
   return (
     <Router>
-      <div className="App">
-        <nav style={{ backgroundColor: "#222", padding: "1rem" }}>
-          <Link to="/" style={{ margin: "0 1rem", color: "white" }}>Home</Link>
-          <Link to="/logs" style={{ margin: "0 1rem", color: "white" }}>Logs</Link>
-        </nav>
-
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/logs" element={<LogsPage />} />
-        </Routes>
-      </div>
+      <NavBar />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/logs" element={<LogViewer />} />
+        <Route path="/visualization" element={<VisualizationPage />} />
+      </Routes>
     </Router>
   );
-};
+}
 
 export default App;

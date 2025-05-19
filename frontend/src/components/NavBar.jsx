@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./NavBar.css"; // optional CSS for styles
+import "../styles/NavBar.css";
 
 const NavBar = () => {
   return (
@@ -11,6 +11,7 @@ const NavBar = () => {
         <Link to="/chat">Chat</Link>
         <Link to="/logs">Logs</Link>
         <Link to="/tickets">Tickets</Link>
+        <Link to="/visualization">Visualization</Link>
       </nav>
       <div className="top-buttons">
         <button className="btn primary">Try It</button>

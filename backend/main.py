@@ -1,7 +1,9 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 import asyncio
+from pydantic import BaseModel
 import subprocess
+import uuid
 
 app = FastAPI()
 
@@ -34,3 +36,22 @@ async def websocket_endpoint(websocket: WebSocket):
     finally:
         process.kill()
         await websocket.close()
+
+
+class Ticket(BaseModel):
+    log: str
+
+# Dummy storage for tickets (in-memory list)
+tickets_db = []
+
+@app.post("/create-ticket")
+async def create_ticket(ticket: Ticket):
+    ticket_id = str(uuid.uuid4())
+    ticket_entry = {
+        "id": ticket_id,
+        "log": ticket.log,
+        "created_at": datetime.now().isoformat()
+    }
+    tickets_db.append(ticket_entry)
+    print(f"Ticket created: {ticket_entry}")
+    return {"message": "Ticket created successfully", "ticket_id": ticket_id}

@@ -1,0 +1,32 @@
+.system-health {
+    padding: 40px;
+    text-align: center;
+}
+
+.health-card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 500px;
+    margin: auto;
+}
+
+.metric {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.progress-bar {
+    height: 20px;
+    background: #ddd;
+    border-radius: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.fill {
+    height: 100%;
+    background: green;
+    width: 50%;
+}

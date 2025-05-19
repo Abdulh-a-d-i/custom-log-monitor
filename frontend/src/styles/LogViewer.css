@@ -1,6 +1,6 @@
 .log-viewer {
     padding: 20px;
-    max-width: 1200px;
+
     width: 100%;
     background: #000000;
 }
@@ -56,4 +56,16 @@
 
 .log-line.info {
     color: #000000;
+}
+
+.context-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid gray;
+    z-index: 100;
+}
+
+.context-menu button {
+    padding: 10px;
+    width: 100%;
 }

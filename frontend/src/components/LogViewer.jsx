@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import "./LogViewer.css";
+import "../styles/LogViewer.css";
 
 const SEVERITIES = ["ALL", "ERROR", "WARNING", "CRITICAL"];
 
@@ -12,19 +12,19 @@ function LogViewer() {
     const ws = new WebSocket("ws://localhost:8000/ws/logs");
     const buffer = [];
     let timer = null;
-  
+
     ws.onmessage = (event) => {
       buffer.push(event.data);
-  
+
       if (!timer) {
         timer = setTimeout(() => {
           setLogs((prevLogs) => [...prevLogs, ...buffer]);
           buffer.length = 0;
           timer = null;
-        }, 1000); // adjust this delay to control frequency
+        }, 1000); // 1 second batching
       }
     };
-  
+
     return () => {
       ws.close();
       clearTimeout(timer);
@@ -39,9 +39,38 @@ function LogViewer() {
     filter === "ALL" ? true : log.toUpperCase().includes(filter)
   );
 
+  const handleRightClick = (e, log) => {
+    e.preventDefault(); // prevent default browser context menu
+    const confirmCreate = window.confirm("Create a ticket for this log?");
+    if (confirmCreate) {
+      createTicket(log);
+    }
+  };
+
+  const createTicket = async (log) => {
+    try {
+      const response = await fetch("http://localhost:8000/create-ticket", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ log }),
+      });
+      if (response.ok) {
+        alert("Ticket created successfully!");
+      } else {
+        alert("Failed to create ticket.");
+      }
+    } catch (error) {
+      console.error("Error creating ticket:", error);
+      alert("Error creating ticket.");
+    }
+  };
+
   return (
     <div className="log-viewer">
-      <h2>📡Live Logs</h2>
+      <h2>📡 Live Logs</h2>
+
       <div className="filters">
         {SEVERITIES.map((sev) => (
           <button
@@ -53,9 +82,14 @@ function LogViewer() {
           </button>
         ))}
       </div>
+
       <div className="log-box">
         {filteredLogs.map((log, idx) => (
-          <pre key={idx} className={`log-line ${getSeverityClass(log)}`}>
+          <pre
+            key={idx}
+            className={`log-line ${getSeverityClass(log)}`}
+            onContextMenu={(e) => handleRightClick(e, log)}
+          >
             {log}
           </pre>
         ))}
